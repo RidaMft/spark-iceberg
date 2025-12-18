@@ -1,0 +1,23 @@
+# ✅ Jupyter écosystème moderne (remplace jupyter==1.1.1)
+notebook==7.5.1              # notebook v7+ (nécessaire pour jupyter-server v2+)
+
+# 🔌 Kernels
+spylon-kernel==0.4.1
+
+# 🐍 Python Essentials
+pandas==2.2.3
+numpy==1.26.4
+pyarrow==17.0.0
+boto3==1.35.13              # dernière stable (compatible avec s3fs, pyiceberg)
+s3fs==2024.12.0             # dernière stable (déc. 2025), requiert fsspec>=2024.6.0
+
+# 🔥 Spark & Cloud
+findspark==2.0.1
+great-expectations[spark]==1.9.3  # dernière GE avec support Spark 3.5.x (nov. 2025)
+faker==26.0.0
+
+# 📊 Data & Validation
+pyiceberg[pyarrow,duckdb,pandas]==0.9.1
+jupysql==0.11.1
+duckdb==1.1.3
+duckdb-engine==0.17.0
