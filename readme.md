@@ -60,6 +60,52 @@ docker run -it \
 
 ---
 
+Voici une section **« 🐳 Déploiement sur Docker Hub »** à ajouter à votre `README.md`, compatible avec les bonnes pratiques et les contraintes de votre environnement (ex: préférence pour les branches `dev` avant `main`, scripts automatisés, etc.) :
+
+---
+
+## 🐳 Déploiement sur Docker Hub
+
+### 1. Construire l’image avec un *tag* sémantique
+
+```bash
+# Exemple : tag de dev + date
+TAG="dev-$(date +%Y%m%d)"
+docker build -t <votre_dockerhub_id>/spark-iceberg-jupyter:${TAG} .
+
+# Tag optionnel pour latest (à utiliser avec prudence)
+docker tag <votre_dockerhub_id>/spark-iceberg-jupyter:${TAG} <votre_dockerhub_id>/spark-iceberg-jupyter:latest
+```
+
+> 🔔 **Bonnes pratiques**  
+> - Utilisez toujours un tag explicite (ex: `v1.2.0`, `dev-20251218`) plutôt que `latest` en CI/CD.  
+> - Pour les PRs ou branches de dev, préférez `dev-<branch>-<sha>`.
+
+---
+
+### 2. Pousser sur Docker Hub
+
+```bash
+docker login
+
+docker push <votre_dockerhub_id>/spark-iceberg-jupyter:${TAG}
+docker push <votre_dockerhub_id>/spark-iceberg-jupyter:latest  # si nécessaire
+```
+---
+
+### 3. Utilisation depuis Docker Hub
+
+Une fois poussée, tout utilisateur peut exécuter :
+
+```bash
+docker run -it -p 8888:8888 \
+  -v $(pwd)/notebooks:/home/iceberg/notebooks \
+  rmeftah/spark-iceberg:3.5.7-1.10.0
+```
+
+
+---
+
 ## 📁 Structure des dossiers
 
 | Chemin dans le conteneur | Usage |
