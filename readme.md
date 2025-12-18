@@ -18,8 +18,6 @@ Une image Docker autonome intégrant **Apache Spark**, **Apache Iceberg**, et **
 | **Jupyter + PySpark** | Via `spylon-kernel` et `pyspark` |
 | **AWS CLI** | v2 (installé globalement) |
 
-> ⚠️ **Note** : Les versions `1.10.0` d’Iceberg et `3.5.7` de Spark ne sont **pas présentes** dans les dépôts Maven/Spark référencés dans votre KB (dernières versions publiques connues : Iceberg `1.9.0`, Spark `3.5.3` en date de déc. 2025).  
-> Vérifiez que ces versions sont disponibles dans vos artéfacts internes ou sur des repositories tiers (ex: staging, snapshots). Sinon, adaptez les variables `ICEBERG_VERSION` / `SPARK_VERSION`.
 
 ---
 
