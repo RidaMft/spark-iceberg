@@ -1,6 +1,13 @@
 # 🐳 Docker Image : Spark + Iceberg + Jupyter Notebook
 
-Une image Docker autonome intégrant **Apache Spark**, **Apache Iceberg**, et **Jupyter Notebook**, conçue pour le développement local ou en environnement cloud (AWS / Azure / GCP). Idéale pour manipuler des tables Iceberg dans des notebooks Python (PySpark), avec connectivité native vers S3, ADLS et GCS.
+> Une image Docker autonome intégrant **Apache Spark**, **Apache Iceberg**, et **Jupyter Notebook**, conçue pour le 
+> développement local ou en environnement cloud (AWS / Azure / GCP). Idéale pour manipuler des tables Iceberg dans des 
+> notebooks Python (PySpark), avec connectivité native vers S3, ADLS et GCS.
+
+![Spark](https://img.shields.io/badge/Spark-3.5.7-red?logo=apachespark)
+![Iceberg](https://img.shields.io/badge/Iceberg-1.10.0-teal?logo=apache)
+![MinIO](https://img.shields.io/badge/MinIO-Latest-blue?logo=minio)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker)
 
 ---
 
