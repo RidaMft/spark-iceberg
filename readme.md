@@ -40,7 +40,7 @@ Une image Docker autonome intégrant **Apache Spark**, **Apache Iceberg**, et **
 ### Construire l’image
 
 ```bash
-docker build -t spark-iceberg-jupyter:latest .
+docker build -t spark-iceberg:latest .
 ```
 
 ### Lancer localement
@@ -51,7 +51,7 @@ docker run -it \
   -p 4040:4040 \
   -v $(pwd)/notebooks:/home/iceberg/notebooks \
   -v $(pwd)/warehouse:/home/iceberg/warehouse \
-  spark-iceberg-jupyter:latest
+  spark-iceberg:latest
 ```
 
 ➡️ Ouvrez [http://localhost:8888](http://localhost:8888) dans votre navigateur.
@@ -71,10 +71,10 @@ Voici une section **« 🐳 Déploiement sur Docker Hub »** à ajouter à votre
 ```bash
 # Exemple : tag de dev + date
 TAG="dev-$(date +%Y%m%d)"
-docker build -t <votre_dockerhub_id>/spark-iceberg-jupyter:${TAG} .
+docker build -t <votre_dockerhub_id>/spark-iceberg:${TAG} .
 
 # Tag optionnel pour latest (à utiliser avec prudence)
-docker tag <votre_dockerhub_id>/spark-iceberg-jupyter:${TAG} <votre_dockerhub_id>/spark-iceberg-jupyter:latest
+docker tag <votre_dockerhub_id>/spark-iceberg:${TAG} <votre_dockerhub_id>/spark-iceberg:latest
 ```
 
 > 🔔 **Bonnes pratiques**  
@@ -88,9 +88,18 @@ docker tag <votre_dockerhub_id>/spark-iceberg-jupyter:${TAG} <votre_dockerhub_id
 ```bash
 docker login
 
-docker push <votre_dockerhub_id>/spark-iceberg-jupyter:${TAG}
-docker push <votre_dockerhub_id>/spark-iceberg-jupyter:latest  # si nécessaire
+docker push <votre_dockerhub_id>/spark-iceberg:${TAG}
+docker push <votre_dockerhub_id>/spark-iceberg:latest  # si nécessaire
 ```
+
+#### Exemple :
+
+```bash
+docker docker build -t rmeftah/spark-iceberg:3.5.7-1.10.0
+docker push rmeftah/spark-iceberg:3.5.7-1.10.0
+docker push rmeftah/spark-iceberg:latest  # si nécessaire
+```
+
 ---
 
 ### 3. Utilisation depuis Docker Hub
@@ -145,7 +154,7 @@ spark.sql.catalog.local.warehouse=file:///home/iceberg/warehouse
 from pyspark.sql import SparkSession
 
 spark = SparkSession.builder \
-    .appName("Iceberg-Jupyter") \
+    .appName("Iceberg") \
     .getOrCreate()
 
 # Créer une table Iceberg
