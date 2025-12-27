@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.7"
 
 services:
   # ===============================
@@ -55,23 +55,64 @@ services:
   # ===============================
   spark-master:
     build:
-      context: .
+      context: ./spark
       dockerfile: Dockerfile.spark
     container_name: spark-master
     ports:
-      - "9090:9090"  # Spark WebUI
       - "7077:7077"  # Port Master
       - "8888:8888"  # Jupyter Notebook
       - "10001:10001" #Thrift Server
+      - "8080:8080" # Spark WebUI
+      - "4040:4040"
     depends_on:
       - nessie  # Spark doit voir Nessie pour le catalog Iceberg
       - minio   # Spark doit voir MinIO pour S3
     volumes:
-      - ./notebooks:/home/iceberg/notebooks/notebooks # Dossier local pour les notebooks
+      - ./notebooks:/home/iceberg/notebooks/notebooks  # Dossier local pour les notebooks
+    environment:
+      - AWS_ACCESS_KEY_ID=minio
+      - AWS_SECRET_ACCESS_KEY=minio123
+      - AWS_REGION=us-east-1
+      - SPARK_MODE=master
     networks:
       iceberg_net:
         aliases:
           - spark-master
+    command: >
+      /bin/bash -c "
+        start-master.sh -p 7077 &
+        start-history-server.sh &
+        start-thriftserver.sh --driver-java-options '-Dderby.system.home=/tmp/derby' &
+        notebook  # ← lance Jupyter après les services Spark
+      "
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    
+  spark-worker:
+    build:
+      context: ./spark
+      dockerfile: Dockerfile.spark
+    container_name: spark-worker
+    depends_on:
+      spark-master:
+          condition: service_healthy
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+    command: >
+      /bin/bash -c "
+        echo '⏳ Attente 15s pour que spark-master soit prêt...';
+        sleep 15;
+        start-worker.sh spark://spark-master:7077 --webui-port 8082;
+        tail -f /dev/null
+      "
+    networks:
+      iceberg_net:
+        aliases:
+          - spark-worker
 
   # ===============================
   # Nessie : versioning / catalog Iceberg
@@ -106,6 +147,7 @@ services:
 # ===============================
 networks:
   iceberg_net:
-
+    driver: bridge
+    name: iceberg_net
 # ===============================
 
